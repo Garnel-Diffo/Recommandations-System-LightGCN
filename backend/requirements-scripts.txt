@@ -1,0 +1,4 @@
+# Dépendances supplémentaires pour les scripts ponctuels (ex: peuplement de la BD).
+# Ne pas installer sur Render : seules celles de requirements.txt sont nécessaires en production.
+-r requirements.txt
+pandas==2.2.2
