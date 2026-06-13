@@ -21,6 +21,18 @@ export default function Footer() {
             Recommandations-System-LightGCN
           </a>
         </p>
+
+        <div className="mt-2 flex flex-col gap-1 border-t border-slate-200/70 pt-3 text-xs text-slate-500 dark:border-slate-800/70 dark:text-slate-400">
+          <p>
+            Fait par : <span className="font-semibold text-slate-700 dark:text-slate-200">DIFFO KENNE GARNEL</span>
+            {" "}- Matricule : <span className="font-medium">24P816</span>
+            {" "}- Filière : <span className="font-medium">AIA-4</span>
+          </p>
+          <p>
+            UE : <span className="font-medium">IA et applications</span>
+            {" "}- Supervisé par : <span className="font-medium">M. Omgba Btha</span>
+          </p>
+        </div>
       </div>
     </footer>
   );

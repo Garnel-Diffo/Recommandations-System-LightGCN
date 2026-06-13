@@ -32,6 +32,7 @@ Le projet est composé de trois parties :
    - [4.4 Installation et lancement local](#44-installation-et-lancement-local)
    - [4.5 Peuplement de la base de données](#45-peuplement-de-la-base-de-données)
    - [4.6 Endpoints de l'API](#46-endpoints-de-lapi)
+   - [4.7 Couverture des affiches TMDb](#47-couverture-des-affiches-tmdb)
 5. [Frontend Next.js](#5-frontend-nextjs)
    - [5.1 Configuration locale (.env)](#51-configuration-locale-env)
    - [5.2 Installation et lancement local](#52-installation-et-lancement-local)
@@ -185,7 +186,8 @@ backend/
 │       ├── recommender.py     # chargement des embeddings + calcul des recommandations
 │       └── tmdb.py             # récupération des URL d'affiches via l'API TMDb
 ├── scripts/
-│   └── populate_db.py        # peuplement ponctuel de la base Neon
+│   ├── populate_db.py         # peuplement ponctuel de la base Neon
+│   └── backfill_posters.py    # récupération ponctuelle des affiches TMDb manquantes
 ├── model_artifacts/           # embeddings et métadonnées exportés par le notebook
 ├── wsgi.py                     # point d'entrée Gunicorn / Flask
 ├── Procfile                     # commande de démarrage pour Render
@@ -214,7 +216,7 @@ Le fichier `backend/.env` (déjà créé, non versionné) contient :
 
 ```env
 FLASK_ENV=development
-DATABASE_URL=postgresql://neondb_owner:npg_5TtqD7UyOQxg@ep-rough-queen-asehowo6.c-4.eu-central-1.aws.neon.tech/neondb?sslmode=require
+DATABASE_URL=mon_string_connexion_postgresql_neon.tech
 TMDB_API_KEY=
 CORS_ORIGINS=http://localhost:3000
 PORT=5000
@@ -283,6 +285,24 @@ Toutes les routes sont préfixées par `/api`.
 | GET | `/api/users` | Liste des utilisateurs de démonstration |
 | GET | `/api/users/<user_id>` | Profil d'un utilisateur (statistiques + films préférés) |
 | GET | `/api/users/<user_id>/recommendations` | Recommandations LightGCN personnalisées (`k`) |
+
+### 4.7 Couverture des affiches TMDb
+
+Les affiches sont récupérées depuis [TMDb](https://www.themoviedb.org/) à partir du `tmdb_id`
+de chaque film (mapping fourni par MovieLens via `links.csv`) grâce à
+`scripts/backfill_posters.py` (voir [7.4](#74-obtenir-une-clé-api-tmdb-affiches)).
+
+Sur les **9 724 films** de la base, la couverture obtenue est la suivante :
+
+| Catégorie | Nombre | Explication |
+|-----------|-------:|-------------|
+| ✅ Avec affiche | 9 592 | `tmdb_id` valide et affiche disponible sur TMDb |
+| ⚠️ `tmdb_id` présent mais sans affiche | 124 | Le film existe sur TMDb mais aucune affiche n'y est référencée (films anciens, peu connus ou retirés) |
+| ⚠️ Pas de `tmdb_id` | 8 | Le mapping MovieLens `links.csv` ne fournit pas d'identifiant TMDb pour ce film |
+
+Pour les **132 films restants** (124 + 8), le frontend affiche un visuel de remplacement
+(titre du film à la place de l'affiche) - **c'est un comportement normal et attendu**, pas un
+bug : TMDb ne fournit simplement aucune affiche pour ces films.
 
 ---
 
@@ -418,10 +438,10 @@ Pour les activer :
 2. Aller dans **Paramètres > API** et demander une clé API (v3 auth) - gratuite, instantanée
 3. Renseigner `TMDB_API_KEY` dans `backend/.env` (local) et dans les variables d'environnement
    Render (production)
-4. Relancer `python -m scripts.populate_db` (en local, pointant vers la base Neon) pour
-   récupérer et enregistrer les URL d'affiches manquantes - le script ignore les films déjà
-   en base sans réessayer leur affiche ; pour forcer la mise à jour, supprimer les lignes
-   concernées ou adapter le script.
+4. Exécuter `./.venv/Scripts/python.exe -m scripts.backfill_posters` (en local, la base Neon
+   étant partagée entre local et production, aucune action n'est nécessaire côté Render) pour
+   récupérer et enregistrer les URL d'affiches manquantes pour les films déjà en base. Voir
+   [4.7](#47-couverture-des-affiches-tmdb) pour le résultat obtenu.
 
 ---
 
