@@ -29,7 +29,7 @@ def create_app(env=None):
     @app.route("/")
     def index():
         return jsonify({
-            "name": "Recommandations-System API",
+            "name": "Recommandations-System-LightGCN API",
             "description": "API Flask de recommandation de films basée sur LightGCN",
             "endpoints": [
                 "/api/health",

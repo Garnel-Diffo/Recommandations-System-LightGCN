@@ -27,8 +27,8 @@ export default async function MovieDetailPage({
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-10">
-      <section className="grid gap-6 sm:grid-cols-[220px_1fr]">
-        <div className="relative aspect-[2/3] w-full overflow-hidden rounded-xl bg-slate-100 shadow-sm dark:bg-slate-800">
+      <section className="animate-fade-in-up grid gap-6 sm:grid-cols-[220px_1fr]">
+        <div className="relative aspect-[2/3] w-full overflow-hidden rounded-xl bg-slate-100 shadow-md dark:bg-slate-800">
           {movie.posterUrl ? (
             <Image
               src={movie.posterUrl}
@@ -45,13 +45,15 @@ export default async function MovieDetailPage({
           )}
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{movie.title}</h1>
+          <h1 className="text-2xl font-bold text-slate-900 sm:text-3xl dark:text-white">
+            {movie.title}
+          </h1>
           {movie.year && <p className="mt-1 text-slate-500 dark:text-slate-400">{movie.year}</p>}
           <div className="mt-3 flex flex-wrap gap-2">
             {movie.genres.map((genre) => (
               <span
                 key={genre}
-                className="rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300"
+                className="rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700 transition-colors hover:bg-indigo-100 dark:bg-indigo-950 dark:text-indigo-300 dark:hover:bg-indigo-900"
               >
                 {genre}
               </span>
@@ -62,22 +64,28 @@ export default async function MovieDetailPage({
               href={`https://www.imdb.com/title/tt${movie.imdbId}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-4 inline-block text-sm font-medium text-indigo-600 hover:underline dark:text-indigo-400"
+              className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-indigo-600 transition hover:gap-2.5 hover:underline dark:text-indigo-400"
             >
-              Voir sur IMDb →
+              Voir sur IMDb <span className="transition-transform">→</span>
             </a>
           )}
         </div>
       </section>
 
-      <section>
+      <section className="animate-fade-in-up delay-100">
         <h2 className="mb-4 text-xl font-bold text-slate-900 dark:text-white">
           Films similaires (embeddings LightGCN)
         </h2>
         {similar.length > 0 ? (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-            {similar.map((m) => (
-              <MovieCard key={m.movieId} movie={m} />
+            {similar.map((m, i) => (
+              <div
+                key={m.movieId}
+                className="animate-scale-in"
+                style={{ animationDelay: `${Math.min(i, 10) * 40}ms` }}
+              >
+                <MovieCard movie={m} />
+              </div>
             ))}
           </div>
         ) : (

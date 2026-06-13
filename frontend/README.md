@@ -1,4 +1,4 @@
-# Frontend — Recommandations-System
+# Frontend - Recommandations-System-LightGCN
 
 Application Next.js (App Router, TypeScript, Tailwind CSS) consommant l'API Flask du dossier [`../backend`](../backend).
 

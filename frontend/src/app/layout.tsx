@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Recommandations-System | LightGCN MovieLens",
+  title: "Recommandations-System-LightGCN | MovieLens",
   description:
     "Système de recommandation de films basé sur LightGCN (GCN pour le filtrage collaboratif), entraîné sur MovieLens.",
 };

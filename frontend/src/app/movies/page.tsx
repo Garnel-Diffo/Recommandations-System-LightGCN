@@ -28,23 +28,34 @@ export default async function MoviesPage({
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-10">
-      <div>
+      <div className="animate-fade-in-up">
         <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Catalogue de films</h1>
         <p className="text-sm text-slate-500 dark:text-slate-400">
           {totalItems.toLocaleString("fr-FR")} films issus de MovieLens (ml-latest-small)
         </p>
       </div>
 
-      <MovieFilters genres={genres} />
+      <div className="animate-fade-in-up delay-100">
+        <MovieFilters genres={genres} />
+      </div>
 
       {movies.length > 0 ? (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-          {movies.map((movie) => (
-            <MovieCard key={movie.movieId} movie={movie} />
+          {movies.map((movie, i) => (
+            <div
+              key={movie.movieId}
+              className="animate-scale-in"
+              style={{ animationDelay: `${Math.min(i, 10) * 40}ms` }}
+            >
+              <MovieCard movie={movie} />
+            </div>
           ))}
         </div>
       ) : (
-        <p className="text-sm text-slate-500 dark:text-slate-400">Aucun film trouvé.</p>
+        <div className="animate-fade-in flex flex-col items-center gap-2 rounded-xl border border-dashed border-slate-300 py-12 text-center dark:border-slate-700">
+          <span className="text-3xl">🔍</span>
+          <p className="text-sm text-slate-500 dark:text-slate-400">Aucun film trouvé.</p>
+        </div>
       )}
 
       <Pagination page={page} totalPages={totalPages} buildHref={buildHref} />

@@ -408,9 +408,9 @@ code(r"""class LightGCN(nn.Module):
 md(r"""## 7. Fonction de perte BPR et échantillonnage négatif
 
 LightGCN est entraîné avec la perte **BPR (Bayesian Personalized Ranking)**, conçue pour les
-retours implicites. Pour chaque triplet $(u, i^+, i^-)$ — un utilisateur $u$, un article
+retours implicites. Pour chaque triplet $(u, i^+, i^-)$ - un utilisateur $u$, un article
 **positif** $i^+$ avec lequel il a réellement interagi, et un article **négatif** $i^-$
-échantillonné aléatoirement parmi les articles non vus —, la perte encourage le score
+échantillonné aléatoirement parmi les articles non vus -, la perte encourage le score
 $\hat{y}_{ui^+}$ à être supérieur au score $\hat{y}_{ui^-}$ :
 
 $$\mathcal{L}_{BPR} = -\sum_{(u,i^+,i^-)} \log \sigma(\hat{y}_{ui^+} - \hat{y}_{ui^-}) +
@@ -768,7 +768,7 @@ md(r"""## 12. Analyse des embeddings appris
 
 Pour comprendre ce que le modèle a appris, nous projetons les embeddings d'articles en 2D avec
 une **ACP (PCA)** et observons si des films de genres similaires se regroupent dans l'espace
-latent — un signe que la propagation multicouche capture bien des signaux collaboratifs
+latent - un signe que la propagation multicouche capture bien des signaux collaboratifs
 cohérents avec le contenu, sans jamais avoir vu les genres pendant l'entraînement.
 
 Nous illustrons également la notion de **similarité d'embeddings** en cherchant, pour quelques
@@ -970,7 +970,7 @@ dossier `models/` pour proposer des recommandations personnalisées en temps ré
 nb['cells'] = cells
 nb['metadata'] = {
     "kernelspec": {
-        "display_name": "Python 3 (Recommandations-System)",
+        "display_name": "Python 3 (Recommandations-System-LightGCN)",
         "language": "python",
         "name": "python3",
     },

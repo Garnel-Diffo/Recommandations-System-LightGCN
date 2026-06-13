@@ -1,16 +1,18 @@
-# Recommandations-System — LightGCN sur MovieLens
+# Recommandations-System-LightGCN
+
+> Dépôt GitHub : [Garnel-Diffo/Recommandations-System-LightGCN](https://github.com/Garnel-Diffo/Recommandations-System-LightGCN)
 
 Système de recommandation de films de bout en bout, basé sur **LightGCN** (réseau de neurones
 convolutif de graphes) entraîné sur le jeu de données **MovieLens (ml-latest-small)**.
 
 Le projet est composé de trois parties :
 
-- **`notebook/`** — Analyse, prétraitement, modélisation, entraînement (BPR), évaluation
+- **`notebook/`** - Analyse, prétraitement, modélisation, entraînement (BPR), évaluation
   (Recall@K / NDCG@K) et export des artefacts du modèle.
-- **`backend/`** — API REST Flask (déployée sur Render) qui sert les recommandations à partir
+- **`backend/`** - API REST Flask (déployée sur Render) qui sert les recommandations à partir
   des embeddings exportés, avec catalogue de films et utilisateurs de démonstration stockés
   dans PostgreSQL (Neon).
-- **`frontend/`** — Application web Next.js (déployée sur Vercel) consommant l'API.
+- **`frontend/`** - Application web Next.js (déployée sur Vercel) consommant l'API.
 
 ---
 
@@ -83,10 +85,10 @@ LightGCN**, exportés une fois pour toutes par le notebook (pas besoin de PyTorc
 
 - **Python 3.12+** (notebook et backend)
 - **Node.js 20+** et npm (frontend)
-- Un compte [Neon](https://neon.tech) (PostgreSQL géré, gratuit) — la chaîne de connexion est
+- Un compte [Neon](https://neon.tech) (PostgreSQL géré, gratuit) - la chaîne de connexion est
   déjà fournie dans `backend/.env`
 - (Optionnel mais recommandé) Une clé API [TMDb](https://www.themoviedb.org/settings/api)
-  gratuite pour récupérer les affiches des films — voir [7.4](#74-obtenir-une-clé-api-tmdb-affiches)
+  gratuite pour récupérer les affiches des films - voir [7.4](#74-obtenir-une-clé-api-tmdb-affiches)
 
 ---
 
@@ -106,9 +108,9 @@ Le notebook suit les phases classiques d'un projet de Machine Learning :
 
 1. Importation des bibliothèques et configuration (graines aléatoires, device, hyperparamètres)
 2. Chargement des données MovieLens
-3. Analyse exploratoire des données (EDA) — distributions des notes, popularité des films,
+3. Analyse exploratoire des données (EDA) - distributions des notes, popularité des films,
    activité des utilisateurs, genres
-4. Prétraitement — encodage des identifiants utilisateurs/articles, split train/val/test
+4. Prétraitement - encodage des identifiants utilisateurs/articles, split train/val/test
    stratifié par utilisateur (70/10/20)
 5. Construction du graphe biparti utilisateur-article (matrice d'adjacence normalisée
    symétriquement $D^{-1/2} A D^{-1/2}$)
@@ -154,11 +156,11 @@ LightGCN surpasse nettement la baseline de popularité sur toutes les métriques
 
 Dans `notebook/models/` (et copiés dans `backend/model_artifacts/`) :
 
-- `user_embeddings.npy`, `item_embeddings.npy` — embeddings finaux (NumPy, `float32`)
-- `mappings.json` — correspondances entre identifiants MovieLens et indices internes
-- `movies_metadata.csv` — métadonnées légères des films (titre, genres, identifiants TMDb/IMDb)
-- `model_state.pt` — poids PyTorch du modèle (pour ré-entraînement éventuel)
-- `eval_metrics.json` — hyperparamètres retenus et métriques finales
+- `user_embeddings.npy`, `item_embeddings.npy` - embeddings finaux (NumPy, `float32`)
+- `mappings.json` - correspondances entre identifiants MovieLens et indices internes
+- `movies_metadata.csv` - métadonnées légères des films (titre, genres, identifiants TMDb/IMDb)
+- `model_state.pt` - poids PyTorch du modèle (pour ré-entraînement éventuel)
+- `eval_metrics.json` - hyperparamètres retenus et métriques finales
 
 ---
 
@@ -194,7 +196,7 @@ backend/
 ```
 
 Le `Recommender` (`app/services/recommender.py`) charge les embeddings `.npy` et `mappings.json`
-en mémoire au démarrage de l'application — aucune dépendance à PyTorch n'est nécessaire en
+en mémoire au démarrage de l'application - aucune dépendance à PyTorch n'est nécessaire en
 production.
 
 ### 4.2 Modèle de données PostgreSQL
@@ -221,7 +223,7 @@ MAX_TOP_K=50
 ```
 
 Un modèle est disponible dans `backend/.env.example`. `TMDB_API_KEY` est vide pour l'instant
-(voir [7.4](#74-obtenir-une-clé-api-tmdb-affiches)) — sans clé, les films sont affichés sans
+(voir [7.4](#74-obtenir-une-clé-api-tmdb-affiches)) - sans clé, les films sont affichés sans
 affiche (`posterUrl: null`), le reste de l'application fonctionne normalement.
 
 ### 4.4 Installation et lancement local
@@ -326,18 +328,18 @@ L'application démarre sur **http://localhost:3000**.
 
 ### 5.3 Pages de l'application
 
-- **`/`** — Accueil, présentation du projet, sélection d'un utilisateur de démonstration
-- **`/movies`** — Catalogue des films (recherche par titre, filtre par genre, pagination)
-- **`/movies/[movieId]`** — Détail d'un film + films similaires (embeddings LightGCN)
-- **`/users/[userId]`** — Profil d'un utilisateur de démonstration : statistiques, films
+- **`/`** - Accueil, présentation du projet, sélection d'un utilisateur de démonstration
+- **`/movies`** - Catalogue des films (recherche par titre, filtre par genre, pagination)
+- **`/movies/[movieId]`** - Détail d'un film + films similaires (embeddings LightGCN)
+- **`/users/[userId]`** - Profil d'un utilisateur de démonstration : statistiques, films
   préférés (historique), recommandations personnalisées
 
 ---
 
 ## 6. Test complet en local
 
-1. Démarrer le backend (port 5000) — voir [4.4](#44-installation-et-lancement-local)
-2. Démarrer le frontend (port 3000) — voir [5.2](#52-installation-et-lancement-local)
+1. Démarrer le backend (port 5000) - voir [4.4](#44-installation-et-lancement-local)
+2. Démarrer le frontend (port 3000) - voir [5.2](#52-installation-et-lancement-local)
 3. Ouvrir **http://localhost:3000** :
    - La page d'accueil doit afficher la liste des utilisateurs de démonstration.
    - `/movies` doit afficher le catalogue paginé, avec recherche et filtre par genre fonctionnels.
@@ -364,7 +366,7 @@ git init
 git add .
 git commit -m "Initial commit: Recommandations-System (LightGCN)"
 git branch -M main
-git remote add origin <URL_DE_VOTRE_DEPOT_GITHUB>
+git remote add origin https://github.com/Garnel-Diffo/Recommandations-System-LightGCN.git
 git push -u origin main
 ```
 
@@ -388,7 +390,7 @@ Le `.gitignore` exclut déjà : `.venv/`, `node_modules/`, `.env*` (sauf `.env.e
    - `DEFAULT_TOP_K` = `10`
    - `MAX_TOP_K` = `50`
 4. Déployer. Une fois le service en ligne, vérifier `https://<votre-service>.onrender.com/api/health`.
-5. La base Neon est déjà peuplée — aucune action supplémentaire n'est nécessaire. Si vous
+5. La base Neon est déjà peuplée - aucune action supplémentaire n'est nécessaire. Si vous
    recréez une base, exécutez `populate_db.py` en local en pointant `DATABASE_URL` vers la
    nouvelle base, **avant** ou après le déploiement (le script peut être lancé depuis votre
    machine, il n'a pas besoin d'être exécuté sur Render).
@@ -408,16 +410,16 @@ Le `.gitignore` exclut déjà : `.venv/`, `node_modules/`, `.env*` (sauf `.env.e
 
 ### 7.4 Obtenir une clé API TMDb (affiches)
 
-Les affiches des films sont **optionnelles** — sans clé, l'application fonctionne normalement
+Les affiches des films sont **optionnelles** - sans clé, l'application fonctionne normalement
 (les cartes de films affichent le titre à la place de l'affiche).
 
 Pour les activer :
 1. Créer un compte gratuit sur [themoviedb.org](https://www.themoviedb.org/)
-2. Aller dans **Paramètres > API** et demander une clé API (v3 auth) — gratuite, instantanée
+2. Aller dans **Paramètres > API** et demander une clé API (v3 auth) - gratuite, instantanée
 3. Renseigner `TMDB_API_KEY` dans `backend/.env` (local) et dans les variables d'environnement
    Render (production)
 4. Relancer `python -m scripts.populate_db` (en local, pointant vers la base Neon) pour
-   récupérer et enregistrer les URL d'affiches manquantes — le script ignore les films déjà
+   récupérer et enregistrer les URL d'affiches manquantes - le script ignore les films déjà
    en base sans réessayer leur affiche ; pour forcer la mise à jour, supprimer les lignes
    concernées ou adapter le script.
 
