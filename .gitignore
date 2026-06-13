@@ -26,6 +26,7 @@ venv/
 # notebook/data/
 # notebook/models/*.npy
 # notebook/models/*.pt
+notebook/build_notebook.py
 
 # ---------------------------------------------------------------------
 # Node / Next.js (frontend)
