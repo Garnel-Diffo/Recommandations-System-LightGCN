@@ -292,17 +292,23 @@ Les affiches sont récupérées depuis [TMDb](https://www.themoviedb.org/) à pa
 de chaque film (mapping fourni par MovieLens via `links.csv`) grâce à
 `scripts/backfill_posters.py` (voir [7.4](#74-obtenir-une-clé-api-tmdb-affiches)).
 
-Sur les **9 724 films** de la base, la couverture obtenue est la suivante :
+Les **9 724 films** de la base ont tous un `poster_url` non nul. Le mapping `tmdb_id` fourni
+par MovieLens contient cependant des identifiants obsolètes pour 132 films (TMDb réassigne
+parfois ses identifiants) : `scripts/backfill_posters.py` corrige ces cas via une recherche
+de repli par `imdb_id` (`/find/tt{imdb_id}`, identifiant stable), qui retrouve aussi bien le
+film que sa fiche série TV le cas échéant.
 
-| Catégorie | Nombre | Explication |
-|-----------|-------:|-------------|
-| ✅ Avec affiche | 9 592 | `tmdb_id` valide et affiche disponible sur TMDb |
-| ⚠️ `tmdb_id` présent mais sans affiche | 124 | Le film existe sur TMDb mais aucune affiche n'y est référencée (films anciens, peu connus ou retirés) |
-| ⚠️ Pas de `tmdb_id` | 8 | Le mapping MovieLens `links.csv` ne fournit pas d'identifiant TMDb pour ce film |
+| Catégorie | Nombre | Source de l'affiche |
+|-----------|-------:|----------------------|
+| ✅ `tmdb_id` directement valide | 9 592 | `/movie/{tmdb_id}` sur TMDb |
+| ✅ `tmdb_id` obsolète, corrigé via `imdb_id` | 125 | Fiche film TMDb retrouvée via `/find/tt{imdb_id}`, `tmdb_id` mis à jour |
+| ✅ Fiche TMDb trouvée uniquement côté série TV | 7 | Affiche de la série TV correspondante (`tmdb_id` non modifié) |
+| ⚠️ Absent de TMDb (et de Wikipedia/Wikidata) | 7 | Affiche de remplacement générée (`placehold.co`, titre du film) |
 
-Pour les **132 films restants** (124 + 8), le frontend affiche un visuel de remplacement
-(titre du film à la place de l'affiche) - **c'est un comportement normal et attendu**, pas un
-bug : TMDb ne fournit simplement aucune affiche pour ces films.
+Les 7 derniers films (ex. fan-films ou documentaries obscurs : *A Very Potter Musical*,
+*Power/Rangers*, *Who Killed Chea Vichea?*...) n'ont strictement aucune image associée sur
+TMDb ni sur Wikipedia/Wikidata - une affiche générique avec le titre du film est utilisée à
+la place pour garantir un visuel cohérent dans l'interface.
 
 ---
 
