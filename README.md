@@ -1,6 +1,8 @@
 # Recommandations-System-LightGCN
 
 > Dépôt GitHub : [Garnel-Diffo/Recommandations-System-LightGCN](https://github.com/Garnel-Diffo/Recommandations-System-LightGCN)
+>
+> Application en ligne (Vercel) : [recommandations-system-light-gcn.vercel.app](https://recommandations-system-light-gcn.vercel.app/)
 
 Système de recommandation de films de bout en bout, basé sur **LightGCN** (réseau de neurones
 convolutif de graphes) entraîné sur le jeu de données **MovieLens (ml-latest-small)**.
@@ -12,7 +14,9 @@ Le projet est composé de trois parties :
 - **`backend/`** - API REST Flask (déployée sur Render) qui sert les recommandations à partir
   des embeddings exportés, avec catalogue de films et utilisateurs de démonstration stockés
   dans PostgreSQL (Neon).
-- **`frontend/`** - Application web Next.js (déployée sur Vercel) consommant l'API.
+- **`frontend/`** - Application web Next.js (déployée sur Vercel :
+  [recommandations-system-light-gcn.vercel.app](https://recommandations-system-light-gcn.vercel.app/))
+  consommant l'API.
 
 ---
 
@@ -319,6 +323,8 @@ Dossier : [`frontend/`](frontend/)
 Application Next.js 16 (App Router, TypeScript, Tailwind CSS v4, React 19), entièrement en
 Server Components pour la récupération des données.
 
+🌐 **Version déployée** : [https://recommandations-system-light-gcn.vercel.app/](https://recommandations-system-light-gcn.vercel.app/)
+
 ```
 frontend/
 ├── src/
@@ -363,6 +369,9 @@ L'application démarre sur **http://localhost:3000**.
 ---
 
 ## 6. Test complet en local
+
+> Pour essayer l'application sans rien installer, ouvrir directement la version déployée :
+> [recommandations-system-light-gcn.vercel.app](https://recommandations-system-light-gcn.vercel.app/).
 
 1. Démarrer le backend (port 5000) - voir [4.4](#44-installation-et-lancement-local)
 2. Démarrer le frontend (port 3000) - voir [5.2](#52-installation-et-lancement-local)
@@ -412,7 +421,7 @@ Le `.gitignore` exclut déjà : `.venv/`, `node_modules/`, `.env*` (sauf `.env.e
    - `FLASK_ENV` = `production`
    - `DATABASE_URL` = `postgresql://neondb_owner:npg_5TtqD7UyOQxg@ep-rough-queen-asehowo6.c-4.eu-central-1.aws.neon.tech/neondb?sslmode=require`
    - `TMDB_API_KEY` = *(votre clé TMDb, voir 7.4)*
-   - `CORS_ORIGINS` = *(URL Vercel de votre frontend, ex : `https://recommandations-system.vercel.app`)*
+   - `CORS_ORIGINS` = *(URL Vercel de votre frontend, ici : `https://recommandations-system-light-gcn.vercel.app`)*
    - `DEFAULT_TOP_K` = `10`
    - `MAX_TOP_K` = `50`
 4. Déployer. Une fois le service en ligne, vérifier `https://<votre-service>.onrender.com/api/health`.
@@ -430,9 +439,10 @@ Le `.gitignore` exclut déjà : `.venv/`, `node_modules/`, `.env*` (sauf `.env.e
    - `NEXT_PUBLIC_API_URL` = `https://<votre-service>.onrender.com` (URL du backend Render,
      **sans** slash final)
 4. Déployer. Une fois en ligne, vérifier que `/`, `/movies`, `/movies/[id]`, `/users/[id]`
-   fonctionnent.
+   fonctionnent. L'application est disponible à l'adresse :
+   **[https://recommandations-system-light-gcn.vercel.app/](https://recommandations-system-light-gcn.vercel.app/)**
 5. **Important** : revenir sur Render et mettre à jour `CORS_ORIGINS` avec l'URL Vercel finale
-   (ex : `https://recommandations-system.vercel.app`), puis redéployer le backend.
+   (`https://recommandations-system-light-gcn.vercel.app`), puis redéployer le backend.
 
 ### 7.4 Obtenir une clé API TMDb (affiches)
 
